@@ -81,7 +81,8 @@ def process_record_dataset(dataset,
   dataset = dataset.prefetch(buffer_size=batch_size)
   if is_training:
     # Shuffles records before repeating to respect epoch boundaries.
-    dataset = dataset.shuffle(buffer_size=shuffle_buffer)
+    # dataset = dataset.shuffle(buffer_size=shuffle_buffer)
+    pass
 
   # Repeats the dataset for the number of epochs to train.
   dataset = dataset.repeat(num_epochs)
@@ -475,7 +476,7 @@ def resnet_main(
   run_config = tf.estimator.RunConfig(
       train_distribute=distribution_strategy,
       session_config=session_config,
-      save_checkpoints_secs=60*60*24)
+      save_checkpoints_secs=60*60*24, tf_random_seed=1)
 
   # Initializes model with all but the dense layer from pretrained ResNet.
   if flags_obj.pretrained_model_checkpoint_path is not None:

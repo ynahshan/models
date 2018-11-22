@@ -24,6 +24,8 @@ from absl import app as absl_app
 from absl import flags
 import tensorflow as tf  # pylint: disable=g-bad-import-order
 
+tf.set_random_seed(1)
+
 from official.utils.flags import core as flags_core
 from official.utils.logs import logger
 from official.resnet import resnet_model
@@ -69,6 +71,7 @@ def get_filenames(is_training, data_dir):
 
 def parse_record(raw_record, is_training, dtype):
   """Parse CIFAR-10 image and label from a raw record."""
+  raw_record.graph.seed=1
   # Convert bytes to a vector of uint8 that is record_bytes long.
   record_vector = tf.decode_raw(raw_record, tf.uint8)
 
@@ -96,13 +99,13 @@ def preprocess_image(image, is_training):
   if is_training:
     # Resize the image to add four extra pixels on each side.
     image = tf.image.resize_image_with_crop_or_pad(
-        image, _HEIGHT + 8, _WIDTH + 8)
+        image, _HEIGHT, _WIDTH)
 
     # Randomly crop a [_HEIGHT, _WIDTH] section of the image.
-    image = tf.random_crop(image, [_HEIGHT, _WIDTH, _NUM_CHANNELS])
+    # image = tf.random_crop(image, [_HEIGHT, _WIDTH, _NUM_CHANNELS], seed=1)
 
     # Randomly flip the image horizontally.
-    image = tf.image.random_flip_left_right(image)
+    # image = tf.image.random_flip_left_right(image, seed=1)
 
   # Subtract off the mean and divide by the variance of the pixels.
   image = tf.image.per_image_standardization(image)
