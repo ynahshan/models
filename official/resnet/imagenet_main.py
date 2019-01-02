@@ -31,7 +31,7 @@ from official.resnet import imagenet_preprocessing
 from official.resnet import resnet_model
 from official.resnet import resnet_run_loop
 
-
+# for getting determenistic moodel
 tf.set_random_seed=1
 
 _DEFAULT_IMAGE_SIZE = 224

@@ -249,6 +249,7 @@ def preprocess_image(image_buffer, bbox, output_height, output_width,
     # For training, we want to randomize some of the distortions. 
     #image = _decode_crop_and_flip(image_buffer, bbox, num_channels)
     #image = _resize_image(image, output_height, output_width)
+    # disabling random cropping from the image during training
     image = tf.image.decode_jpeg(image_buffer, channels=num_channels)
     image = _aspect_preserving_resize(image, _RESIZE_MIN)
     image = _central_crop(image, output_height, output_width)
