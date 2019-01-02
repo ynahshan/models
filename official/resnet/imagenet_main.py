@@ -19,6 +19,7 @@ from __future__ import division
 from __future__ import print_function
 
 import os
+#import ngraph_bridge
 
 from absl import app as absl_app
 from absl import flags
@@ -29,6 +30,9 @@ from official.utils.logs import logger
 from official.resnet import imagenet_preprocessing
 from official.resnet import resnet_model
 from official.resnet import resnet_run_loop
+
+
+tf.set_random_seed=1
 
 _DEFAULT_IMAGE_SIZE = 224
 _NUM_CHANNELS = 3
@@ -144,6 +148,8 @@ def parse_record(raw_record, is_training, dtype):
   Returns:
     Tuple with processed image tensor and one-hot-encoded label tensor.
   """
+  raw_record.graph.seed=1
+  
   image_buffer, label, bbox = _parse_example_proto(raw_record)
 
   image = imagenet_preprocessing.preprocess_image(
@@ -178,9 +184,9 @@ def input_fn(is_training, data_dir, batch_size, num_epochs=1,
   filenames = get_filenames(is_training, data_dir)
   dataset = tf.data.Dataset.from_tensor_slices(filenames)
 
-  if is_training:
+  #if is_training:
     # Shuffle the input files
-    dataset = dataset.shuffle(buffer_size=_NUM_TRAIN_FILES)
+    #dataset = dataset.shuffle(buffer_size=_NUM_TRAIN_FILES)
 
   # Convert to individual records.
   # cycle_length = 10 means 10 files will be read and deserialized in parallel.
